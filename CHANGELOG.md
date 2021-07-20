@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.6](https://github.com/risk-and-safety/platform/compare/github-actions@3.9.5...github-actions@3.9.6) (2021-07-13)
+
+
+### Bug Fixes
+
+* **build:** only git push ci kube-ns if image changed, update configmaps ([a7d622e](https://github.com/risk-and-safety/platform/commit/a7d622e686cdbfcfccb9c4863ba24805520b6a10))
+
+
+
+
+
 ## [3.9.5](https://github.com/risk-and-safety/platform/compare/github-actions@3.9.4...github-actions@3.9.5) (2021-07-01)
 
 
