@@ -58507,8 +58507,8 @@ const { cleanAppName, appNameEquals } = __nccwpck_require__(2613);
 
 const { addLabelsToPr } = __nccwpck_require__(8848);
 
-async function changedSinceLatestTag(rootDir, packageName, path) {
-  const tagPrefix = `refs/tags/${packageName}@*`;
+async function changedSinceLatestTag(pkgJson) {
+  const tagPrefix = `refs/tags/${pkgJson.name}@*`;
   const refsTags = await exec(`git for-each-ref --sort=-taggerdate --format '%(refname)' ${tagPrefix}`);
   const [latestTag] = refsTags
     .split('\n')
@@ -58516,21 +58516,18 @@ async function changedSinceLatestTag(rootDir, packageName, path) {
     .map((refTag) => refTag.replace('refs/tags/', ''));
 
   if (!latestTag) {
-    return packageName;
+    return pkgJson.name;
   }
 
-  const changedFiles = await exec(`git diff --name-only ${latestTag} -- ${rootDir}/${path}`);
+  const changedFiles = await exec(`git diff --name-only ${latestTag} -- ${pkgJson.location}`);
 
-  return changedFiles.length > 0 ? packageName : null;
+  return changedFiles.length > 0 ? pkgJson.name : null;
 }
 
 async function findChangedPackages(project) {
   const pkgJsons = await project.getPackages();
-  const projectDir = project.packageParentDirs[0].split('/').pop();
 
-  const packages = await Promise.all(
-    pkgJsons.map((pkgJson) => changedSinceLatestTag(projectDir, pkgJson.name, pkgJson.location.split('/').pop())),
-  );
+  const packages = await Promise.all(pkgJsons.map(changedSinceLatestTag));
 
   return packages.filter(Boolean);
 }
@@ -58590,20 +58587,14 @@ async function findChangedFiles(srcBranch, destBranch) {
 
 async function findChangedPackages(project, changedFiles) {
   const pkgJsons = await project.getPackages();
-  const projectDir = project.packageParentDirs[0].split('/').pop();
 
-  const changedPkgDirs = changedFiles
-    .filter((filename) => filename.startsWith(projectDir))
-    .map((filename) => filename.substring(0, filename.indexOf('/', projectDir.length + 1)));
+  return pkgJsons
+    .filter((pkgJson) => {
+      const path = pkgJson.location.substring(pkgJson.rootPath.length + 1);
 
-  const uniqChangedPkgDirs = [...new Set(changedPkgDirs)];
-
-  return uniqChangedPkgDirs
-    .map((pkgDir) => {
-      const { name } = pkgJsons.find((pkgJson) => pkgJson.location.endsWith(pkgDir)) || {};
-      return name;
+      return changedFiles.some((filename) => filename.startsWith(path));
     })
-    .filter(Boolean);
+    .map((pkgJson) => pkgJson.name);
 }
 
 async function labeler({ gitHubClient, targetBranch, skipLabels = [], dryRun = false, prefix = LABEL_PREFIX }) {
