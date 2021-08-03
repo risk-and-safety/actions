@@ -60956,7 +60956,6 @@ async function findByLabels({ gitHubClient, include = [], packageJsonKeys = ['la
   }
 
   const project = new Project(process.cwd());
-  const projectDir = project.packageParentDirs[0].split('/').pop();
   const pkgJsons = QueryGraph.toposort(await project.getPackages()); // sort dependencies before dependents
 
   const matches = pkgJsons.filter((pkgJson) => labels.some((label) => appNameEquals(label, pkgJson.name)));
@@ -60973,7 +60972,7 @@ async function findByLabels({ gitHubClient, include = [], packageJsonKeys = ['la
       }
 
       if (key === 'location') {
-        const location = pkgJson.location.substring(pkgJson.location.indexOf(`${projectDir}/`));
+        const location = pkgJson.location.substring(pkgJson.rootPath.length + 1);
         return { ...acc, location };
       }
 
