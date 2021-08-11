@@ -1,8 +1,8 @@
 name: Docker Prune
-description: GitHub Action to prune/delete container versions from GitHub Container Registry (ghcr.io)
+description: GitHub Action to delete container versions group by tag prefix
 inputs:
   token:
-    description: Secret access token with scopes `packages:read` and `packages:delete` and write permissions on the targeted container
+    description: Personal Access Token with scopes `packages:read` and `packages:delete` and write permissions on the targeted container
     required: true
   app:
     description: Name of the container to prune
