@@ -1,0 +1,27 @@
+name: Docker Prune
+description: GitHub Action to prune/delete container versions from GitHub Container Registry (ghcr.io)
+inputs:
+  token:
+    description: Secret access token with scopes `packages:read` and `packages:delete` and write permissions on the targeted container
+    required: true
+  app:
+    description: Name of the container to prune
+    required: true
+  tag-prefixes:
+    description: List of tag prefixes to group images into when determining keep-last. Prefixes should in descending order of precedence
+    required: true
+  older-than:
+    description: Minimum age in days of container versions to prune
+    required: false
+    default: "14"
+  keep-last:
+    description: Count of most recent, matching containers to exclude from pruning
+    required: false
+    default: "10"
+  untagged:
+    description: Whether untagged container versions should be pruned
+    required: false
+    default: "true"
+runs:
+  using: node12
+  main: index.js
