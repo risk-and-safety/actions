@@ -1,14 +1,14 @@
 name: Docker Prune
-description: GitHub Action to delete container versions group by tag prefix
+description: GitHub Action to delete container versions, grouped by tag prefix
 inputs:
   token:
-    description: Personal Access Token with scopes `packages:read` and `packages:delete` and write permissions on the targeted container
+    description: Personal Access Token with scopes `packages:read` and `packages:delete` and write permissions to the container
     required: true
   app:
     description: Name of the container to prune
     required: true
   tag-prefixes:
-    description: List of tag prefixes to group images into when determining keep-last. Prefixes should in descending order of precedence
+    description: Tag prefixes to group images by when determining keep-last. Prefixes should in descending order of precedence
     required: true
   older-than:
     description: Minimum age in days of container versions to prune

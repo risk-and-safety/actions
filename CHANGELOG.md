@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.9.8...github-actions@3.10.0) (2021-08-11)
+
+
+### Features
+
+* **build:** add docker-prune to keep 10 of each prefix ([31664b6](https://github.com/risk-and-safety/platform/commit/31664b62a13deeacb3d7da29a1c7b37a48df74e9))
+
+
+
+
+
 ## [3.9.8](https://github.com/risk-and-safety/platform/compare/github-actions@3.9.7...github-actions@3.9.8) (2021-08-07)
 
 **Note:** Version bump only for package github-actions
