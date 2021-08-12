@@ -12429,7 +12429,8 @@ async function prune({ gitHubClient, app, tagPrefixes, olderThan = 14, keepLast 
     { UNTAGGED: [], NO_MATCH: [] },
   );
 
-  info(`Found prefixes: ${Object.entries(groupedByPrefix).map(([key, value]) => ` ${key}: ${value.length}`)}`);
+  const prefixCounts = Object.entries(groupedByPrefix).map(([key, value]) => ` ${key}: ${value.length}`);
+  info(`Tag prefix counts: ${prefixCounts}`);
 
   const imagesToDelete = Object.entries(groupedByPrefix)
     .reduce((acc, [prefix, images]) => {
