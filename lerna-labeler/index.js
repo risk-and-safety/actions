@@ -58594,7 +58594,7 @@ async function findChangedPackages(project, changedFiles) {
 
   return pkgJsons
     .filter((pkgJson) => {
-      const path = pkgJson.location.substring(pkgJson.rootPath.length + 1);
+      const path = `${pkgJson.location.substring(pkgJson.rootPath.length + 1)}/`;
 
       return changedFiles.some((filename) => filename.startsWith(path));
     })
