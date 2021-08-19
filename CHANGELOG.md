@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.2](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.1...github-actions@3.10.2) (2021-08-13)
+
+
+### Bug Fixes
+
+* **build:** labeler should ignore apps with similar names (client, client-fuse) ([6c4a59e](https://github.com/risk-and-safety/platform/commit/6c4a59ec22d5ef033bab2d24a2b92d21b91ce521))
+* **changelog:** remove GitHub Release notes 25k max as no longer applies ([6e52b5e](https://github.com/risk-and-safety/platform/commit/6e52b5ea79da581d644d4255bd886a93bfd75ca3))
+
+
+
+
+
 ## [3.10.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.0...github-actions@3.10.1) (2021-08-12)
 
 **Note:** Version bump only for package github-actions
