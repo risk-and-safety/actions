@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.3](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.2...github-actions@3.10.3) (2021-08-19)
+
+
+### Bug Fixes
+
+* **actions:** catch docker-pull error when checking cache ([a497400](https://github.com/risk-and-safety/platform/commit/a497400dea5dcabb5f95eead0d2a464d96632f24))
+
+
+
+
+
 ## [3.10.2](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.1...github-actions@3.10.2) (2021-08-13)
 
 
