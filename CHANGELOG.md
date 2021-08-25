@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.4...github-actions@3.11.0) (2021-08-25)
+
+
+### Features
+
+* **snyk:** Security upgrade node from 14.17.2-slim to 14.17.4-slim ([5307f08](https://github.com/risk-and-safety/platform/commit/5307f0801d473295cee5dd42a6fda6f18f843be5))
+
+
+
+
+
+## [3.10.4](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.3...github-actions@3.10.4) (2021-08-19)
+
+
+### Bug Fixes
+
+* **changelog:** fix max changelog length ([244db85](https://github.com/risk-and-safety/platform/commit/244db85aef17cefafa13c90fda3131adb302b173))
+
+
+
+
+
 ## [3.10.3](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.2...github-actions@3.10.3) (2021-08-19)
 
 
