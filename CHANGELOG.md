@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.0...github-actions@3.11.1) (2021-08-25)
+
+
+### Bug Fixes
+
+* **errorHandler:** account for null err.errors on 400 status ([3625e31](https://github.com/risk-and-safety/platform/commit/3625e31147da8949f53975442bb0c46f80812dd8))
+
+
+
+
+
 # [3.11.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.10.4...github-actions@3.11.0) (2021-08-25)
 
 
