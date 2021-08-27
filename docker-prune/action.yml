@@ -13,15 +13,15 @@ inputs:
   older-than:
     description: Minimum age in days of container versions to prune
     required: false
-    default: "14"
+    default: '14'
   keep-last:
     description: Count of most recent, matching containers to exclude from pruning
     required: false
-    default: "10"
+    default: '10'
   untagged:
     description: Whether untagged container versions should be pruned
     required: false
-    default: "true"
+    default: 'true'
 runs:
   using: node12
   main: index.js

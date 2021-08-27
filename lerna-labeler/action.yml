@@ -19,11 +19,11 @@ inputs:
   dry-run:
     description: Do NOT push to the pull request. Only output the labels
     required: false
-    default: "false"
+    default: 'false'
   prefix:
     description: Label prefix
     required: false
-    default: "deploy:"
+    default: 'deploy:'
 outputs:
   labels:
     description: Comma separated list of app labels

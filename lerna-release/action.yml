@@ -13,27 +13,27 @@ inputs:
   channel:
     description: Slack Channel for release notes
     required: false
-    default: "#changelog"
+    default: '#changelog'
   jira-issue-url:
     description: URL template for the jira issues
     required: false
-    default: "https://riskandsafetysolutions.atlassian.net/browse/{ISSUE_KEY}"
+    default: 'https://riskandsafetysolutions.atlassian.net/browse/{ISSUE_KEY}'
   create-release:
     description: Indicates if the a GitHub Release and Slack message should be generated
     required: false
-    default: "true"
+    default: 'true'
   draft:
     description: Indicates if the GitHub Release is still in draft (ie the Pull Request is still open)
     required: false
-    default: "true"
+    default: 'true'
   publish:
     description: Publish any unpublished npm packages. Draft must be false as well.
     required: false
-    default: "false"
+    default: 'false'
   time-zone:
     description: Time zone for dates in the release notes.
     required: false
-    default: "America/Los_Angeles"
+    default: 'America/Los_Angeles'
 runs:
   using: node12
   main: index.js

@@ -53,11 +53,11 @@ inputs:
   cleanup:
     description: Indicates if the Kubernetes namespace and AWS Congito URL should be deleted
     required: false
-    default: "false"
+    default: 'false'
   dry-run:
     description: Skip the git push to the repo for integration tests
     required: false
-    default: "false"
+    default: 'false'
 runs:
   using: node12
   main: index.js

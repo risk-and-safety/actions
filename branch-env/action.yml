@@ -9,7 +9,7 @@ inputs:
     description: Name of the env variable to export
     required: true
 outputs:
-  "var-name":
+  'var-name':
     description: The current branch env exported to the GitHub Actions "env" object (eg env.{var-name}). Defaults to "dev".
 runs:
   using: node12

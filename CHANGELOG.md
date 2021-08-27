@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.2](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.1...github-actions@3.11.2) (2021-08-26)
+
+
+### Bug Fixes
+
+* **elasticsearch:** downgrade to 7.13 to support AWS ES ([42fde60](https://github.com/risk-and-safety/platform/commit/42fde609b9a5de464142a43878c6deefcfbdc761))
+
+
+
+
+
 ## [3.11.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.0...github-actions@3.11.1) (2021-08-25)
 
 

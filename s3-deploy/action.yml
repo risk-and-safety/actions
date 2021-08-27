@@ -25,11 +25,11 @@ inputs:
   zip-file:
     description: Path to the zip file. If not provided it will pull the staged zip from S3.
     required: false
-    default: "false"
+    default: 'false'
   stage-next-zip-file:
     description: Indicates if the zip file should be staged for the next environment.
     required: false
-    default: "true"
+    default: 'true'
 outputs:
   url:
     description: URL to the deployed version.json file
