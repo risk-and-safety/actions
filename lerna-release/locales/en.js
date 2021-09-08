@@ -8827,7 +8827,7 @@ module.exports = process.platform === 'win32'
 /***/ }),
 
 /***/ 5898:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8931,7 +8931,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = Buffer.isBuffer;
+exports.isBuffer = __nccwpck_require__(4293).Buffer.isBuffer;
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
