@@ -30,6 +30,10 @@ inputs:
       JSON array of Kubernetes images and S3 webContexts that have changed
       (eg [{ label: 'app-a', image: 'ghcr.io/app-a:latest' }, { label: 'app-b', webContext: '/context' }])"
     required: false
+  strip-suffixes:
+    description: App name suffixes to strip off before searching the Kubernetes manifest
+    required: false
+    default: ''
   all-apps:
     description: |
       JSON array of all apps that should be deployed, not just changed apps
