@@ -134,12 +134,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
 const os = __importStar(__nccwpck_require__(2087));
 const path = __importStar(__nccwpck_require__(5622));
+const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
  */
@@ -312,19 +313,30 @@ exports.debug = debug;
 /**
  * Adds an error issue
  * @param message error issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
+function error(message, properties = {}) {
+    command_1.issueCommand('error', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.error = error;
 /**
- * Adds an warning issue
+ * Adds a warning issue
  * @param message warning issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
+function warning(message, properties = {}) {
+    command_1.issueCommand('warning', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.warning = warning;
+/**
+ * Adds a notice issue
+ * @param message notice issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
+ */
+function notice(message, properties = {}) {
+    command_1.issueCommand('notice', utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+exports.notice = notice;
 /**
  * Writes info to log with console.log.
  * @param message info message
@@ -397,6 +409,12 @@ function getState(name) {
     return process.env[`STATE_${name}`] || '';
 }
 exports.getState = getState;
+function getIDToken(aud) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield oidc_utils_1.OidcClient.getIDToken(aud);
+    });
+}
+exports.getIDToken = getIDToken;
 //# sourceMappingURL=core.js.map
 
 /***/ }),
@@ -450,6 +468,90 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
+/***/ 8041:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OidcClient = void 0;
+const http_client_1 = __nccwpck_require__(9925);
+const auth_1 = __nccwpck_require__(3702);
+const core_1 = __nccwpck_require__(2186);
+class OidcClient {
+    static createHttpClient(allowRetry = true, maxRetry = 10) {
+        const requestOptions = {
+            allowRetries: allowRetry,
+            maxRetries: maxRetry
+        };
+        return new http_client_1.HttpClient('actions/oidc-client', [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
+    }
+    static getRequestToken() {
+        const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+        if (!token) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable');
+        }
+        return token;
+    }
+    static getIDTokenUrl() {
+        const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];
+        if (!runtimeUrl) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable');
+        }
+        return runtimeUrl;
+    }
+    static getCall(id_token_url) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const httpclient = OidcClient.createHttpClient();
+            const res = yield httpclient
+                .getJson(id_token_url)
+                .catch(error => {
+                throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
+        Error Message: ${error.result.message}`);
+            });
+            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
+            if (!id_token) {
+                throw new Error('Response json body do not have ID Token field');
+            }
+            return id_token;
+        });
+    }
+    static getIDToken(audience) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // New ID Token is requested from action service
+                let id_token_url = OidcClient.getIDTokenUrl();
+                if (audience) {
+                    const encodedAudience = encodeURIComponent(audience);
+                    id_token_url = `${id_token_url}&audience=${encodedAudience}`;
+                }
+                core_1.debug(`ID token url is ${id_token_url}`);
+                const id_token = yield OidcClient.getCall(id_token_url);
+                core_1.setSecret(id_token);
+                return id_token;
+            }
+            catch (error) {
+                throw new Error(`Error message: ${error.message}`);
+            }
+        });
+    }
+}
+exports.OidcClient = OidcClient;
+//# sourceMappingURL=oidc-utils.js.map
+
+/***/ }),
+
 /***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -458,7 +560,7 @@ exports.issueCommand = issueCommand;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toCommandValue = void 0;
+exports.toCommandProperties = exports.toCommandValue = void 0;
 /**
  * Sanitizes an input into a string so it can be passed into issueCommand safely
  * @param input input to sanitize into a string
@@ -473,6 +575,26 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        file: annotationProperties.file,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+exports.toCommandProperties = toCommandProperties;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -692,13 +814,79 @@ exports.getOctokitOptions = getOctokitOptions;
 
 /***/ }),
 
+/***/ 3702:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+class BasicCredentialHandler {
+    constructor(username, password) {
+        this.username = username;
+        this.password = password;
+    }
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' +
+                Buffer.from(this.username + ':' + this.password).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BasicCredentialHandler = BasicCredentialHandler;
+class BearerCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] = 'Bearer ' + this.token;
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BearerCredentialHandler = BearerCredentialHandler;
+class PersonalAccessTokenCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' + Buffer.from('PAT:' + this.token).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
+
+
+/***/ }),
+
 /***/ 9925:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(5876);
+const http = __nccwpck_require__(8605);
 const https = __nccwpck_require__(7211);
 const pm = __nccwpck_require__(6443);
 let tunnel;
@@ -6914,7 +7102,7 @@ module.exports = function(stream_module) {
 
 const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
-const mkdirsSync = __nccwpck_require__(8605).mkdirsSync
+const mkdirsSync = __nccwpck_require__(2915).mkdirsSync
 const utimesMillisSync = __nccwpck_require__(2548).utimesMillisSync
 const stat = __nccwpck_require__(3901)
 
@@ -7101,7 +7289,7 @@ module.exports = {
 
 const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
-const mkdirs = __nccwpck_require__(8605).mkdirs
+const mkdirs = __nccwpck_require__(2915).mkdirs
 const pathExists = __nccwpck_require__(3835).pathExists
 const utimesMillis = __nccwpck_require__(2548).utimesMillis
 const stat = __nccwpck_require__(3901)
@@ -7356,7 +7544,7 @@ module.exports = {
 const u = __nccwpck_require__(746)/* .fromPromise */ .p
 const fs = __nccwpck_require__(1176)
 const path = __nccwpck_require__(5622)
-const mkdir = __nccwpck_require__(8605)
+const mkdir = __nccwpck_require__(2915)
 const remove = __nccwpck_require__(7357)
 
 const emptyDir = u(async function emptyDir (dir) {
@@ -7403,7 +7591,7 @@ module.exports = {
 const u = __nccwpck_require__(746)/* .fromCallback */ .E
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(7758)
-const mkdir = __nccwpck_require__(8605)
+const mkdir = __nccwpck_require__(2915)
 
 function createFile (file, callback) {
   function makeFile () {
@@ -7511,7 +7699,7 @@ module.exports = {
 const u = __nccwpck_require__(746)/* .fromCallback */ .E
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(7758)
-const mkdir = __nccwpck_require__(8605)
+const mkdir = __nccwpck_require__(2915)
 const pathExists = __nccwpck_require__(3835).pathExists
 const { areIdentical } = __nccwpck_require__(3901)
 
@@ -7729,7 +7917,7 @@ module.exports = {
 const u = __nccwpck_require__(746)/* .fromCallback */ .E
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(1176)
-const _mkdirs = __nccwpck_require__(8605)
+const _mkdirs = __nccwpck_require__(2915)
 const mkdirs = _mkdirs.mkdirs
 const mkdirsSync = _mkdirs.mkdirsSync
 
@@ -7952,7 +8140,7 @@ module.exports = {
   ...__nccwpck_require__(6970),
   ...__nccwpck_require__(55),
   ...__nccwpck_require__(213),
-  ...__nccwpck_require__(8605),
+  ...__nccwpck_require__(2915),
   ...__nccwpck_require__(9665),
   ...__nccwpck_require__(1497),
   ...__nccwpck_require__(6570),
@@ -8046,7 +8234,7 @@ module.exports = outputJson
 
 /***/ }),
 
-/***/ 8605:
+/***/ 2915:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -8155,7 +8343,7 @@ const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
 const copySync = __nccwpck_require__(1135).copySync
 const removeSync = __nccwpck_require__(7357).removeSync
-const mkdirpSync = __nccwpck_require__(8605).mkdirpSync
+const mkdirpSync = __nccwpck_require__(2915).mkdirpSync
 const stat = __nccwpck_require__(3901)
 
 function moveSync (src, dest, opts) {
@@ -8231,7 +8419,7 @@ const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
 const copy = __nccwpck_require__(1335).copy
 const remove = __nccwpck_require__(7357).remove
-const mkdirp = __nccwpck_require__(8605).mkdirp
+const mkdirp = __nccwpck_require__(2915).mkdirp
 const pathExists = __nccwpck_require__(3835).pathExists
 const stat = __nccwpck_require__(3901)
 
@@ -8311,7 +8499,7 @@ module.exports = move
 const u = __nccwpck_require__(746)/* .fromCallback */ .E
 const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
-const mkdir = __nccwpck_require__(8605)
+const mkdir = __nccwpck_require__(2915)
 const pathExists = __nccwpck_require__(3835).pathExists
 
 function outputFile (file, data, encoding, callback) {
@@ -10042,7 +10230,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var Stream = _interopDefault(__nccwpck_require__(2413));
-var http = _interopDefault(__nccwpck_require__(5876));
+var http = _interopDefault(__nccwpck_require__(8605));
 var Url = _interopDefault(__nccwpck_require__(8835));
 var whatwgUrl = _interopDefault(__nccwpck_require__(3323));
 var https = _interopDefault(__nccwpck_require__(7211));
@@ -14022,7 +14210,7 @@ module.exports = __nccwpck_require__(4219);
 
 var net = __nccwpck_require__(1631);
 var tls = __nccwpck_require__(4016);
-var http = __nccwpck_require__(5876);
+var http = __nccwpck_require__(8605);
 var https = __nccwpck_require__(7211);
 var events = __nccwpck_require__(8614);
 var assert = __nccwpck_require__(2357);
@@ -15687,7 +15875,7 @@ module.exports = require("fs");;
 
 /***/ }),
 
-/***/ 5876:
+/***/ 8605:
 /***/ ((module) => {
 
 "use strict";
