@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.8](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.7...github-actions@3.11.8) (2021-10-23)
+
+
+### Bug Fixes
+
+* **ci:** strip -server suffix for apps like inspect-v2-server, assessment-v2-server, etc ([dec3fb2](https://github.com/risk-and-safety/platform/commit/dec3fb2b000f218b559a964e8377a9a35ef63e08))
+
+
+
+
+
 ## [3.11.7](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.6...github-actions@3.11.7) (2021-10-21)
 
 **Note:** Version bump only for package github-actions
