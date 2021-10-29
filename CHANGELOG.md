@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.11](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.10...github-actions@3.11.11) (2021-10-29)
+
+
+### Bug Fixes
+
+* **ci:** do NOT revert ci images when another app is changed ([e1061e4](https://github.com/risk-and-safety/platform/commit/e1061e41c2cb0619cef7778208e447b9360231ac))
+
+
+
+
+
 ## [3.11.10](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.9...github-actions@3.11.10) (2021-10-29)
 
 **Note:** Version bump only for package github-actions
