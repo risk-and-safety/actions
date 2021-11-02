@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.12](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.11...github-actions@3.11.12) (2021-10-30)
+
+
+### Bug Fixes
+
+* **ci:** support both [app] and [app-server] Docker image names ([9c87029](https://github.com/risk-and-safety/platform/commit/9c8702902e0b12b7579ae5a2ce9ba0eadea9cd26))
+
+
+
+
+
 ## [3.11.11](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.10...github-actions@3.11.11) (2021-10-29)
 
 
