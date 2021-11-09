@@ -10,6 +10,9 @@ inputs:
   app:
     description: App name
     required: true
+  docker-name:
+    description: Docker image name if different from the app name
+    required: false
   file-hash:
     description: File hash to compare to the Docker 'fileHash' label to determine a cache hit
     required: false

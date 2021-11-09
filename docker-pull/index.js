@@ -14808,7 +14808,8 @@ async function dockerPull(params) {
   const { owner, repo } = github.context.repo;
   const { fileHash, password, registry = 'ghcr.io', username } = params;
   const app = cleanAppName(params.app);
-  const dockerImage = `${registry}/${owner}/${repo}/${app}`;
+  const dockerName = cleanAppName(params.dockerName || app);
+  const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
   const stagingTag = await getStagingTag();
 
   await dockerLogin({ username, password, registry });
@@ -14817,7 +14818,7 @@ async function dockerPull(params) {
     await sh(`docker pull ${dockerImage}:${stagingTag}`);
   } catch (err) {
     if (err.message.includes('daemon: name unknown') || err.message.includes('daemon: manifest unknown')) {
-      info(`No Docker image matching ${app}:${stagingTag} found`);
+      info(`No Docker image matching ${dockerName}:${stagingTag} found`);
       return { image: `${dockerImage}:${stagingTag}`, found: false, cacheHit: false };
     }
 
@@ -15662,6 +15663,7 @@ const params = {
   username: core.getInput('username', { required: true }),
   password: core.getInput('password', { required: true }),
   app: core.getInput('app', { required: true }),
+  dockerName: core.getInput('docker-name'),
   fileHash: core.getInput('file-hash'),
   registry: core.getInput('registry'),
 };
