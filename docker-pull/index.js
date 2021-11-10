@@ -15123,12 +15123,13 @@ async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
   }
 
   const now = new Date().toISOString();
-  const labels = [`org.opencontainers.image.created=${now}`, `commit=${await getShortCommit()}`, ...moreLabels].reduce(
+  const commit = await getShortCommit();
+  const labels = [`org.opencontainers.image.created=${now}`, `commit=${commit}`, ...moreLabels].reduce(
     (acc, label) => `${acc} --label ${label}`,
     '',
   );
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels}`);
+  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels} --build-arg ${commit}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {
@@ -15154,46 +15155,6 @@ async function dockerPush(dockerImage, tag) {
   }
 }
 
-async function findImages({ gitHubClient, owner, repo, apps, tag }) {
-  const query = `query($owner: String!, $repo: String!, $apps: [String!]!) {
-  repository(owner: $owner, name: $repo) {
-    name
-    packages(first: 100, names: $apps) {
-      edges {
-        node {
-          name
-          packageType
-          versions(first: 100, orderBy: { field:CREATED_AT, direction:DESC }) {
-            nodes {
-              id
-              version
-            }
-          }
-        }
-      }
-    }
-  }
-}`;
-
-  const {
-    repository: {
-      packages: { edges: packageEdges },
-    },
-  } = await gitHubClient.graphql(query, {
-    owner,
-    repo,
-    apps,
-    headers: HTTP_HEADERS_PACKAGES,
-  });
-
-  const compareTag = new RegExp(`^${tag}$`);
-
-  return packageEdges
-    .filter((edge) => edge.node.packageType === 'DOCKER')
-    .flatMap((edge) => edge.node.versions.nodes.map((version) => ({ ...version, name: edge.node.name })))
-    .filter((version) => compareTag.test(version.version));
-}
-
 async function getStagingTag(branch) {
   const srcBranch = branch || (await getSrcBranch());
 
@@ -15204,7 +15165,6 @@ module.exports.deleteVersion = deleteVersion;
 module.exports.dockerBuild = dockerBuild;
 module.exports.dockerLogin = dockerLogin;
 module.exports.dockerPush = dockerPush;
-module.exports.findImages = findImages;
 module.exports.getStagingTag = getStagingTag;
 module.exports.HTTP_HEADERS_PACKAGES = HTTP_HEADERS_PACKAGES;
 

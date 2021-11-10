@@ -6,7 +6,6 @@ Common GitHub Actions for Risk and Safety Solution.
 - branch-env
 - docker-pull
 - docker-release
-- kube-status
 - lambda-deploy
 - lerna-find-by-labels
 - lerna-labeler
