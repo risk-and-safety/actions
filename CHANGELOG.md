@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.15](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.14...github-actions@3.11.15) (2021-11-10)
+
+**Note:** Version bump only for package github-actions
+
+
+
+
+
 ## [3.11.14](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.13...github-actions@3.11.14) (2021-11-06)
 
 **Note:** Version bump only for package github-actions
