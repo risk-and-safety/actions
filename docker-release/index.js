@@ -14840,7 +14840,7 @@ async function dockerRelease(params) {
   if (deploy && stageNextImage) {
     // Tag for staging to the next environment
     const nextStagingTag = await getStagingTag(await getDestBranch());
-    await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${nextStagingTag}`);
+    await sh(`docker tag ${dockerImage}:${path ? tag : stagingTag} ${dockerImage}:${nextStagingTag}`);
     await dockerPush(dockerImage, nextStagingTag);
   }
 
@@ -15145,7 +15145,7 @@ async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
     '',
   );
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels} --build-arg COMMIT=${commit}`);
+  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {

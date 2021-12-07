@@ -15129,7 +15129,7 @@ async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
     '',
   );
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels} --build-arg COMMIT=${commit}`);
+  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {
