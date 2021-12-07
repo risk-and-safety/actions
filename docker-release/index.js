@@ -15317,7 +15317,7 @@ module.exports.cleanNamespace = function cleanNamespace(uncleanNamespace) {
 module.exports.cleanZipPath = function cleanPath(uncleanZipPath) {
   const zipPath = uncleanZipPath || '.';
 
-  if (zipPath !== '.' && !/^[\w-]{2,50}\/[\w-]{2,50}\/[\w-.]{2,50}.zip$/g.test(zipPath)) {
+  if (zipPath !== '.' && !/^\/?[\w-]{2,50}\/[\w-]{2,50}\/[\w-.]{2,50}.zip$/g.test(zipPath)) {
     throw new Error(`Invalid zip path "${uncleanZipPath}"`);
   }
 
