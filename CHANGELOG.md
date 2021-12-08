@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.19](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.18...github-actions@3.11.19) (2021-12-07)
+
+
+### Bug Fixes
+
+* **deploy:** add missing 'zipFile' to s3-deploy param ([7fedfe6](https://github.com/risk-and-safety/platform/commit/7fedfe6111b0bea6a0e84d4f346a38259cd0eeb4))
+* **deploy:** add missing 'zipFile' to s3-deploy param ([c12b8ab](https://github.com/risk-and-safety/platform/commit/c12b8abda64a54798d006a0133f781c4255fb0a5))
+* **deploy:** don't put stagingTag if rebuilding image, remove commit build arg ([5cedfc7](https://github.com/risk-and-safety/platform/commit/5cedfc79f9a39409da343f0ee8319f180ff665ff))
+
+
+
+
+
 ## [3.11.18](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.17...github-actions@3.11.18) (2021-11-20)
 
 **Note:** Version bump only for package github-actions

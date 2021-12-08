@@ -25,7 +25,7 @@ inputs:
   zip-file:
     description: Path to the zip file. If not provided it will pull the staged zip from S3.
     required: false
-    default: 'false'
+    default: ''
   stage-next-zip-file:
     description: Indicates if the zip file should be staged for the next environment.
     required: false
