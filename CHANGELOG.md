@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.21](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.19...github-actions@3.11.21) (2021-12-17)
+
+
+### Bug Fixes
+
+* **deploy:** default zip-file param to empty instead of 'false' ([2f356f2](https://github.com/risk-and-safety/platform/commit/2f356f214fa30f7fa8df6a57584fe02158a3dcd5))
+
+
+
+
+
+## [3.11.20](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.19...github-actions@3.11.20) (2021-12-08)
+
+
+### Bug Fixes
+
+* **deploy:** default zip-file param to empty instead of 'false' ([2f356f2](https://github.com/risk-and-safety/platform/commit/2f356f214fa30f7fa8df6a57584fe02158a3dcd5))
+
+
+
+
+
 ## [3.11.19](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.18...github-actions@3.11.19) (2021-12-07)
 
 
