@@ -14821,7 +14821,7 @@ async function dockerRelease(params) {
   const tagPrefix = params.tagPrefix ? cleanNamespace(params.tagPrefix) : await getEnv();
   const commit = await getShortCommit();
   const stagingTag = await getStagingTag();
-  // ISO 8601 basic date format (YYYYMMDDThhmmss) since Docker tags don't allow colons
+  // ISO 8601 basic date format (YYYYMMDDTHHmmss) since Docker tags don't allow colons
   const tagSuffix = new Date()
     .toISOString()
     .replace(/[:-]/g, '')
