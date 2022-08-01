@@ -13,7 +13,6 @@ inputs:
   channel:
     description: Slack Channel for release notes
     required: false
-    default: '#changelog'
   jira-issue-url:
     description: URL template for the jira issues
     required: false
