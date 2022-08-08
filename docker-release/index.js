@@ -15134,8 +15134,9 @@ async function deleteVersion(gitHubClient, { id, name, version }) {
 }
 
 async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
-  if (fs.existsSync('package.json') && !fs.existsSync('package-lock.json') && !fs.existsSync('yarn.lock')) {
-    throw new Error('Missing yarn.lock or package-lock.json file');
+  const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'];
+  if (fs.existsSync('package.json') && lockFiles.every((file) => !fs.existsSync(file))) {
+    throw new Error(`Missing one of ${lockFiles.join(', ')}`);
   }
 
   const now = new Date().toISOString();
