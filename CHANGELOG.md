@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.12.0...github-actions@3.12.1) (2022-08-11)
+
+**Note:** Version bump only for package github-actions
+
+
+
+
+
+# [3.12.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.27...github-actions@3.12.0) (2022-08-09)
+
+
+### Features
+
+* **github-actions:** add pnpm lockfile to docker release check ([094a762](https://github.com/risk-and-safety/platform/commit/094a76202de163c469a3353a07c27e05b3fe5c7b))
+
+
+
+
+
 ## [3.11.27](https://github.com/risk-and-safety/platform/compare/github-actions@3.11.25...github-actions@3.11.27) (2022-07-29)
 
 **Note:** Version bump only for package github-actions
