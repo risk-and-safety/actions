@@ -3,9 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [3.12.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.12.0...github-actions@3.12.1) (2022-08-11)
+## [3.12.3](https://github.com/risk-and-safety/platform/compare/github-actions@3.12.1...github-actions@3.12.3) (2022-08-18)
 
-**Note:** Version bump only for package github-actions
+
+### Bug Fixes
+
+* **github-actions:** allow npmjs automation token to publish ([8567654](https://github.com/risk-and-safety/platform/commit/8567654ad853bf6a6aa715f0db9fab0dc6309e76))
+
+
+
+
+
+## [3.12.2](https://github.com/risk-and-safety/platform/compare/github-actions@3.12.0...github-actions@3.12.2) (2022-08-12)
+
+
+### Bug Fixes
+
+* **github-actions:** allow npmjs automation token to publish ([8567654](https://github.com/risk-and-safety/platform/commit/8567654ad853bf6a6aa715f0db9fab0dc6309e76))
+
 
 
 
