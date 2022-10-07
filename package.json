@@ -1,6 +1,6 @@
 {
   "name": "github-actions",
-  "version": "3.12.1",
+  "version": "3.12.3",
   "description": "Shared Risk and Safety GitHub Actions",
   "author": "Risk and Safety Solutions",
   "repository": "https://github.com/risk-and-safety/platform",
@@ -18,7 +18,7 @@
     "test": "node jest.setup.js && cross-env AWS_PROFILE=mgmt jest"
   },
   "dependencies": {
-    "@actions/core": "1.4.0",
+    "@actions/core": "1.9.1",
     "@actions/github": "5.0.0",
     "@lerna/project": "3.21.0",
     "@lerna/publish": "3.22.1",
