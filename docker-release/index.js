@@ -14817,7 +14817,7 @@ async function dockerRelease(params) {
   const path = params.path && cleanPath(params.path);
   const app = cleanAppName(params.app);
   const dockerName = cleanAppName(params.dockerName || app);
-  const file = cleanPath(params.file);
+  const file = params.file && cleanPath(params.file);
   const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
   const tagPrefix = params.tagPrefix ? cleanNamespace(params.tagPrefix) : await getEnv();
   const commit = await getShortCommit();
