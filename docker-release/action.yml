@@ -13,6 +13,9 @@ inputs:
   docker-name:
     description: Docker image name if different from the app name
     required: false
+  file:
+    description: Path to the Dockerfile
+    required: false
   tag-prefix:
     description: Image tag prefix that Fluxcd will look for (eg 'glob:dev-*'). Defaults to the env [dev,qa,prod,hc]
     required: false

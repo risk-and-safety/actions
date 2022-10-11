@@ -16733,6 +16733,7 @@ async function dockerRelease(params) {
   const path = params.path && cleanPath(params.path);
   const app = cleanAppName(params.app);
   const dockerName = cleanAppName(params.dockerName || app);
+  const file = params.file && cleanPath(params.file);
   const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
   const tagPrefix = params.tagPrefix ? cleanNamespace(params.tagPrefix) : await getEnv();
   const commit = await getShortCommit();
@@ -16747,7 +16748,7 @@ async function dockerRelease(params) {
   await dockerLogin({ username, password, registry });
 
   if (path) {
-    await dockerBuild(dockerImage, tag, path, labels);
+    await dockerBuild({ dockerImage, tag, file, path, labels });
   } else {
     await sh(`docker pull ${dockerImage}:${stagingTag}`);
     await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${tag}`);
@@ -17049,20 +17050,22 @@ async function deleteVersion(gitHubClient, { id, name, version }) {
   info(`Deleted version ${name}:${version} ( ${id} ): ${util.inspect(deletePackageVersion)}`);
 }
 
-async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
+async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
   const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'];
-  if (fs.existsSync('package.json') && lockFiles.every((file) => !fs.existsSync(file))) {
+  if (fs.existsSync('package.json') && lockFiles.every((item) => !fs.existsSync(item))) {
     throw new Error(`Missing one of ${lockFiles.join(', ')}`);
   }
 
   const now = new Date().toISOString();
   const commit = await getShortCommit();
-  const labels = [`org.opencontainers.image.created=${now}`, `commit=${commit}`, ...moreLabels].reduce(
+  const labelArgs = [`org.opencontainers.image.created=${now}`, `commit=${commit}`, ...labels].reduce(
     (acc, label) => `${acc} --label ${label}`,
     '',
   );
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels}`);
+  const fileArg = file ? `-f ${file}` : '';
+
+  await sh(`docker build -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {
@@ -17566,6 +17569,7 @@ const params = {
   password: core.getInput('password', { required: true }),
   app: core.getInput('app', { required: true }),
   dockerName: core.getInput('docker-name'),
+  file: core.getInput('file'),
   tagPrefix: core.getInput('tag-prefix'),
   deploy: core.getInput('deploy') === 'true',
   stageNextImage: core.getInput('stage-next-image') === 'true',
