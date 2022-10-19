@@ -14802,7 +14802,15 @@ const github = __nccwpck_require__(5438);
 const { getEnv, getDestBranch, getShortCommit } = __nccwpck_require__(9329);
 const { dockerBuild, dockerLogin, dockerPush, getStagingTag } = __nccwpck_require__(8929);
 const { sh } = __nccwpck_require__(7845);
-const { cleanPath, cleanAppName, cleanNamespace } = __nccwpck_require__(2613);
+const { cleanPath, cleanAppName, isValidNamespace } = __nccwpck_require__(2613);
+
+function validateTag(tag) {
+  if (!isValidNamespace(tag)) {
+    throw new Error(`Invalid tag prefix "${tag}"`);
+  }
+
+  return tag.toLowerCase();
+}
 
 async function dockerRelease(params) {
   const { owner, repo } = github.context.repo;
@@ -14819,7 +14827,7 @@ async function dockerRelease(params) {
   const dockerName = cleanAppName(params.dockerName || app);
   const file = params.file && cleanPath(params.file);
   const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
-  const tagPrefix = params.tagPrefix ? cleanNamespace(params.tagPrefix) : await getEnv();
+  const tagPrefix = params.tagPrefix ? validateTag(params.tagPrefix) : await getEnv();
   const commit = await getShortCommit();
   const stagingTag = await getStagingTag();
   // ISO 8601 basic date format (YYYYMMDDTHHmmss) since Docker tags don't allow colons
@@ -15308,14 +15316,8 @@ module.exports.validateEnv = function validateEnv(env) {
   return env;
 };
 
-module.exports.cleanNamespace = function cleanNamespace(uncleanNamespace) {
-  const namespace = uncleanNamespace && uncleanNamespace.toLowerCase();
-
-  if (!namespace || !/^[a-z][a-z0-9-]{1,62}$/gi.test(namespace)) {
-    throw new Error(`Invalid namespace name "${uncleanNamespace}"`);
-  }
-
-  return namespace;
+module.exports.isValidNamespace = function isValidNamespace(namespace) {
+  return namespace && !/^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
 };
 
 module.exports.cleanZipPath = function cleanPath(uncleanZipPath) {
