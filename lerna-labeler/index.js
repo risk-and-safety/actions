@@ -63016,14 +63016,8 @@ module.exports.validateEnv = function validateEnv(env) {
   return env;
 };
 
-module.exports.cleanNamespace = function cleanNamespace(uncleanNamespace) {
-  const namespace = uncleanNamespace && uncleanNamespace.toLowerCase();
-
-  if (!namespace || !/^[a-z][a-z0-9-]{1,62}$/gi.test(namespace)) {
-    throw new Error(`Invalid namespace name "${uncleanNamespace}"`);
-  }
-
-  return namespace;
+module.exports.isValidNamespace = function isValidNamespace(namespace) {
+  return namespace && /^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
 };
 
 module.exports.cleanZipPath = function cleanPath(uncleanZipPath) {
