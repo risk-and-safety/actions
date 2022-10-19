@@ -15488,7 +15488,7 @@ module.exports.validateEnv = function validateEnv(env) {
 };
 
 module.exports.isValidNamespace = function isValidNamespace(namespace) {
-  return namespace && !/^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
+  return namespace && /^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
 };
 
 module.exports.cleanZipPath = function cleanPath(uncleanZipPath) {
