@@ -18033,7 +18033,15 @@ const github = __nccwpck_require__(5438);
 const { getEnv, getDestBranch, getShortCommit } = __nccwpck_require__(9329);
 const { dockerBuild, dockerLogin, dockerPush, getStagingTag } = __nccwpck_require__(8929);
 const { sh } = __nccwpck_require__(7845);
-const { cleanPath, cleanAppName, cleanNamespace } = __nccwpck_require__(2613);
+const { cleanPath, cleanAppName, isValidNamespace } = __nccwpck_require__(2613);
+
+function validateTag(tag) {
+  if (!isValidNamespace(tag)) {
+    throw new Error(`Invalid tag prefix "${tag}"`);
+  }
+
+  return tag.toLowerCase();
+}
 
 async function dockerRelease(params) {
   const { owner, repo } = github.context.repo;
@@ -18048,8 +18056,9 @@ async function dockerRelease(params) {
   const path = params.path && cleanPath(params.path);
   const app = cleanAppName(params.app);
   const dockerName = cleanAppName(params.dockerName || app);
+  const file = params.file && cleanPath(params.file);
   const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
-  const tagPrefix = params.tagPrefix ? cleanNamespace(params.tagPrefix) : await getEnv();
+  const tagPrefix = params.tagPrefix ? validateTag(params.tagPrefix) : await getEnv();
   const commit = await getShortCommit();
   const stagingTag = await getStagingTag();
   // ISO 8601 basic date format (YYYYMMDDTHHmmss) since Docker tags don't allow colons
@@ -18062,7 +18071,7 @@ async function dockerRelease(params) {
   await dockerLogin({ username, password, registry });
 
   if (path) {
-    await dockerBuild(dockerImage, tag, path, labels);
+    await dockerBuild({ dockerImage, tag, file, path, labels });
   } else {
     await sh(`docker pull ${dockerImage}:${stagingTag}`);
     await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${tag}`);
@@ -18364,20 +18373,22 @@ async function deleteVersion(gitHubClient, { id, name, version }) {
   info(`Deleted version ${name}:${version} ( ${id} ): ${util.inspect(deletePackageVersion)}`);
 }
 
-async function dockerBuild(dockerImage, tag, path, moreLabels = []) {
+async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
   const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'];
-  if (fs.existsSync('package.json') && lockFiles.every((file) => !fs.existsSync(file))) {
+  if (fs.existsSync('package.json') && lockFiles.every((item) => !fs.existsSync(item))) {
     throw new Error(`Missing one of ${lockFiles.join(', ')}`);
   }
 
   const now = new Date().toISOString();
   const commit = await getShortCommit();
-  const labels = [`org.opencontainers.image.created=${now}`, `commit=${commit}`, ...moreLabels].reduce(
+  const labelArgs = [`org.opencontainers.image.created=${now}`, `commit=${commit}`, ...labels].reduce(
     (acc, label) => `${acc} --label ${label}`,
     '',
   );
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${path} ${labels}`);
+  const fileArg = file ? `-f ${file}` : '';
+
+  await sh(`docker build -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {
@@ -18536,14 +18547,8 @@ module.exports.validateEnv = function validateEnv(env) {
   return env;
 };
 
-module.exports.cleanNamespace = function cleanNamespace(uncleanNamespace) {
-  const namespace = uncleanNamespace && uncleanNamespace.toLowerCase();
-
-  if (!namespace || !/^[a-z][a-z0-9-]{1,62}$/gi.test(namespace)) {
-    throw new Error(`Invalid namespace name "${uncleanNamespace}"`);
-  }
-
-  return namespace;
+module.exports.isValidNamespace = function isValidNamespace(namespace) {
+  return namespace && /^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
 };
 
 module.exports.cleanZipPath = function cleanPath(uncleanZipPath) {
@@ -18883,6 +18888,7 @@ const params = {
   password: core.getInput('password', { required: true }),
   app: core.getInput('app', { required: true }),
   dockerName: core.getInput('docker-name'),
+  file: core.getInput('file'),
   tagPrefix: core.getInput('tag-prefix'),
   deploy: core.getInput('deploy') === 'true',
   stageNextImage: core.getInput('stage-next-image') === 'true',
