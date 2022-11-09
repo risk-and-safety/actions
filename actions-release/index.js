@@ -18348,17 +18348,15 @@ async function actionsRelease(params) {
     process.chdir(TEMP_GIT_DIR);
 
     if (!dirExists) {
-      await sh(`git init && git remote add origin "${originUrl}"`);
+      await sh(`git clone --depth=1 "${originUrl}" .`);
       await setGitUser(user);
     }
-
-    await sh(`git fetch && git pull origin ${DEFAULT_BRANCH}`);
 
     const branch = await getSrcBranch();
     const remoteExists = await exec(`git ls-remote --heads origin refs/heads/${branch}`);
 
     if (remoteExists) {
-      await sh(`git checkout ${branch} -- && git pull`);
+      await sh(`git checkout ${branch} -- && git pull --depth=1`);
     } else {
       await sh(`git checkout ${branch} -- || git checkout -b ${branch}`);
     }

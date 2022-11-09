@@ -24,6 +24,7 @@
     "@lerna/publish": "5.6.2",
     "@lerna/query-graph": "5.6.2",
     "@lerna/version": "5.6.2",
+    "@nrwl/cli": "15.0.13",
     "@slack/web-api": "6.7.2",
     "aws-sdk": "2.1238.0",
     "axios": "0.27.2",
@@ -37,13 +38,12 @@
     "slackify-markdown": "4.3.1",
     "tweetsodium": "0.0.6",
     "uuid": "9.0.0",
-    "yargs": "17.6.0"
+    "yargs": "17.6.2"
   },
   "devDependencies": {
     "@vercel/ncc": "0.34.0",
     "cross-env": "7.0.3",
-    "esbuild": "0.15.12",
-    "eslint": "8.26.0",
+    "eslint": "8.27.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
