@@ -41,5 +41,5 @@ outputs:
   image:
     description: The Docker image name
 runs:
-  using: node12
+  using: node16
   main: index.js
