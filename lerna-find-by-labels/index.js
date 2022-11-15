@@ -60576,9 +60576,42 @@ function resolveFlowSeqItems(doc, cst) {
               src
             } = prevItem.context;
 
-module.exports.isValidNamespace = function isValidNamespace(namespace) {
-  return namespace && /^[a-zA-Z][a-zA-Z0-9-]{1,62}$/gi.test(namespace);
-};
+            for (let i = keyStart; i < keyEnd; ++i) if (src[i] === '\n') {
+              const msg = 'Implicit keys of flow sequence pairs need to be on a single line';
+              doc.errors.push(new PlainValue.YAMLSemanticError(prevItem, msg));
+              break;
+            }
+          }
+        } else {
+          key = null;
+        }
+
+        keyStart = null;
+        explicitKey = false;
+        next = null;
+      } else if (next === '[' || char !== ']' || i < cst.items.length - 1) {
+        const msg = `Flow sequence contains an unexpected ${char}`;
+        const err = new PlainValue.YAMLSyntaxError(cst, msg);
+        err.offset = offset;
+        doc.errors.push(err);
+      }
+    } else if (item.type === PlainValue.Type.BLANK_LINE) {
+      comments.push({
+        before: items.length
+      });
+    } else if (item.type === PlainValue.Type.COMMENT) {
+      checkFlowCommentSpace(doc.errors, item);
+      comments.push({
+        comment: item.comment,
+        before: items.length
+      });
+    } else {
+      if (next) {
+        const msg = `Expected a ${next} in flow sequence`;
+        doc.errors.push(new PlainValue.YAMLSemanticError(item, msg));
+      }
+
+      const value = resolveNode(doc, item);
 
       if (key === undefined) {
         items.push(value);
