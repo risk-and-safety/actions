@@ -16524,7 +16524,8 @@ async function actionsRelease(params) {
     const remoteExists = await exec(`git ls-remote --heads origin refs/heads/${branch}`);
 
     if (remoteExists) {
-      await sh(`git checkout ${branch} -- && git pull --depth=1`);
+      await sh(`git fetch --depth=1 origin ${branch}:${branch}`);
+      await sh(`git checkout ${branch}`);
     } else {
       await sh(`git checkout ${branch} -- || git checkout -b ${branch}`);
     }
