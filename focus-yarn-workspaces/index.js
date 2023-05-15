@@ -38,6 +38,10 @@ const updateYarnWorkspaces = async (rootPkgJsonPath, workspaceLocations) => {
 
   pkgJson.workspaces = workspaceLocations;
 
+  console.log(
+    '🚀 ~ file: focus-yarn-workspaces.js:36 ~ updateYarnWorkspaces ~ JSON.stringify(pkgJson):',
+    JSON.stringify(pkgJson),
+  );
   await writeFile(rootPkgJsonPath, JSON.stringify(pkgJson));
 };
 
@@ -115,12 +119,11 @@ var __webpack_exports__ = {};
 const { findPkgLocations, updateYarnWorkspaces } = __nccwpck_require__(491);
 
 const run = async () => {
-  console.log(process.env);
-  // const pkgName = core.getInput('package', { required: true });
-  // const rootPackageJson = core.getInput('root-package-json', { required: false }) || './package.json';
+  const pkgName = process.env.INPUT_PACKAGE;
+  const rootPackageJson = process.env['INPUT_ROOT-PACKAGE-JSON'] || './package.json';
 
-  // const pkgLocations = await findPkgLocations(pkgName);
-  // await updateYarnWorkspaces(rootPackageJson, pkgLocations);
+  const pkgLocations = await findPkgLocations(pkgName);
+  await updateYarnWorkspaces(rootPackageJson, pkgLocations);
 };
 
 run().catch((err) => {
