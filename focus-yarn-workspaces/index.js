@@ -28,17 +28,24 @@ const findPkgLocations = async (pkgName) => {
   return [location, ...workspaceDependencies.map((dep) => workspaces[dep].location)];
 };
 
-const updateYarnWorkspaces = async (rootPkgJsonPath, workspaceLocations) => {
-  if (!/package.json$/.test(rootPkgJsonPath)) {
-    throw new Error(`Invalid package.json path [${rootPkgJsonPath}]`);
+const updateYarnWorkspaces = async (pkgJsonPath, workspaceLocations, badResolutions = []) => {
+  if (!/package.json$/.test(pkgJsonPath)) {
+    throw new Error(`Invalid package.json path [${pkgJsonPath}]`);
   }
 
-  const pkgJsonBuffer = await readFile(rootPkgJsonPath);
+  const pkgJsonBuffer = await readFile(pkgJsonPath);
   const pkgJson = JSON.parse(pkgJsonBuffer.toString());
 
   pkgJson.workspaces = workspaceLocations;
 
-  await writeFile(rootPkgJsonPath, JSON.stringify(pkgJson, null, 2));
+  // Remove fsevents per https://github.com/yarnpkg/yarn/issues/6834
+  if (pkgJson.resolutions) {
+    pkgJson.resolutions = Object.fromEntries(
+      Object.entries(pkgJson.resolutions).filter(([key]) => !badResolutions.some((name) => key.endsWith(name))),
+    );
+  }
+
+  await writeFile(pkgJsonPath, JSON.stringify(pkgJson, null, 2));
 };
 
 module.exports.findPkgLocations = findPkgLocations;
@@ -117,9 +124,10 @@ const { findPkgLocations, updateYarnWorkspaces } = __nccwpck_require__(491);
 const run = async () => {
   const pkgName = process.env.INPUT_PACKAGE;
   const rootPackageJson = process.env['INPUT_ROOT-PACKAGE-JSON'] || './package.json';
+  const badResolutions = (process.env['INPUT_BAD-RESOLUTIONS'] || '').split(/,\n/);
 
   const pkgLocations = await findPkgLocations(pkgName);
-  await updateYarnWorkspaces(rootPackageJson, pkgLocations);
+  await updateYarnWorkspaces(rootPackageJson, pkgLocations, badResolutions);
 };
 
 run().catch((err) => {
