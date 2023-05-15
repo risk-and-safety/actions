@@ -38,11 +38,7 @@ const updateYarnWorkspaces = async (rootPkgJsonPath, workspaceLocations) => {
 
   pkgJson.workspaces = workspaceLocations;
 
-  console.log(
-    '🚀 ~ file: focus-yarn-workspaces.js:36 ~ updateYarnWorkspaces ~ JSON.stringify(pkgJson):',
-    JSON.stringify(pkgJson),
-  );
-  await writeFile(rootPkgJsonPath, JSON.stringify(pkgJson));
+  await writeFile(rootPkgJsonPath, JSON.stringify(pkgJson, null, 2));
 };
 
 module.exports.findPkgLocations = findPkgLocations;
