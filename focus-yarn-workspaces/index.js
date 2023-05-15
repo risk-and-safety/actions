@@ -124,7 +124,7 @@ const { findPkgLocations, updateYarnWorkspaces } = __nccwpck_require__(491);
 const run = async () => {
   const pkgName = process.env.INPUT_PACKAGE;
   const rootPackageJson = process.env['INPUT_ROOT-PACKAGE-JSON'] || './package.json';
-  const badResolutions = (process.env['INPUT_BAD-RESOLUTIONS'] || '').split(/,\n/);
+  const badResolutions = (process.env['INPUT_BAD-RESOLUTIONS'] || '').split(/[,\n]/);
 
   const pkgLocations = await findPkgLocations(pkgName);
   await updateYarnWorkspaces(rootPackageJson, pkgLocations, badResolutions);
