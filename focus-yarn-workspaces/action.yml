@@ -1,0 +1,12 @@
+name: Focus Yarn Workspaces
+description: Override the Yarn package.json workspaces field with this package and it's workspace dependencies.
+inputs:
+  root-package-json:
+    description: Path to the root package.json for Yarn workspaces
+    required: true
+  package:
+    description: The package to focus on
+    required: true
+runs:
+  using: node16
+  main: index.js
