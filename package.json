@@ -10,7 +10,8 @@
   "config": {
     "deployTypes": [
       "GIT"
-    ]
+    ],
+    "runsOn": "ubuntu-latest"
   },
   "scripts": {
     "lint": "eslint .",
