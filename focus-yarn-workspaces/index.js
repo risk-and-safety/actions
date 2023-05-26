@@ -13,14 +13,14 @@ const util = __nccwpck_require__(837);
 
 const exec = util.promisify(child_process.exec);
 
-const findPkgLocations = async (pkgName) => {
+const findPkgLocations = async (name) => {
   const { stdout } = await exec('yarn workspaces --json info');
   const { data } = JSON.parse(stdout);
   const workspaces = JSON.parse(data);
-  const pkg = workspaces[pkgName];
+  const pkg = workspaces[name];
 
   if (!pkg) {
-    throw new Error(`Unable to find package [${pkgName}]`);
+    throw new Error(`Unable to find package [${name}]`);
   }
 
   const { location, workspaceDependencies } = pkg;
@@ -122,12 +122,12 @@ var __webpack_exports__ = {};
 const { findPkgLocations, updateYarnWorkspaces } = __nccwpck_require__(491);
 
 const run = async () => {
-  const pkgName = process.env.INPUT_PACKAGE;
+  const packageName = process.env.INPUT_PACKAGE;
   const rootPackageJson = process.env['INPUT_ROOT-PACKAGE-JSON'] || './package.json';
   const badResolutions = (process.env['INPUT_BAD-RESOLUTIONS'] || '').split(/[,\n]/);
 
-  const pkgLocations = await findPkgLocations(pkgName);
-  await updateYarnWorkspaces(rootPackageJson, pkgLocations, badResolutions);
+  const locations = await findPkgLocations(packageName);
+  await updateYarnWorkspaces(rootPackageJson, locations, badResolutions);
 };
 
 run().catch((err) => {
