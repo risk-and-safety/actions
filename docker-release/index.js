@@ -39241,7 +39241,6 @@ async function dockerRelease(params) {
   } else {
     await sh(`docker pull ${dockerImage}:${stagingTag}`);
     await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${tag}`);
-    await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${envTag}`);
   }
 
   if (deploy && stageNextImage) {
