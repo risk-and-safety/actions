@@ -39248,13 +39248,13 @@ async function dockerRelease(params) {
     const nextStagingTag = await getStagingTag(await getDestBranch());
     await sh(`docker tag ${dockerImage}:${path ? tag : stagingTag} ${dockerImage}:${nextStagingTag}`);
     await dockerPush(dockerImage, nextStagingTag);
+    // Used to represent the latest deployed image for a particular environment.
+    // e.g. If 'qa' tag point to an image, that is the image currently deployed in qa.
+    // This provides a friendly name for the latest image.
+    await dockerPush(dockerImage, env);
   }
 
   await dockerPush(dockerImage, tag);
-
-  if (deploy) {
-    await dockerPush(dockerImage, env);
-  }
 
   return `${dockerImage}:${tag}`;
 }
