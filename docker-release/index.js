@@ -39224,6 +39224,7 @@ async function dockerRelease(params) {
   const file = params.file && cleanPath(params.file);
   const dockerImage = `${registry}/${owner}/${repo}/${dockerName}`;
   const tagPrefix = params.tagPrefix ? validateTag(params.tagPrefix) : await getEnv();
+  const env = await getEnv();
   const commit = await getShortCommit();
   const stagingTag = await getStagingTag();
   // ISO 8601 basic date format (YYYYMMDDTHHmmss) since Docker tags don't allow colons
@@ -39232,7 +39233,6 @@ async function dockerRelease(params) {
     .replace(/[:-]/g, '')
     .replace(/\.\d+Z$/, '');
   const tag = deploy ? `${tagPrefix}-${commit}-${tagSuffix}` : stagingTag;
-  const envTag = `${tagPrefix}`;
 
   await dockerLogin({ username, password, registry });
 
@@ -39253,7 +39253,7 @@ async function dockerRelease(params) {
   await dockerPush(dockerImage, tag);
 
   if (deploy) {
-    await dockerPush(dockerImage, envTag)
+    await dockerPush(dockerImage, env)
   }
 
   return `${dockerImage}:${tag}`;
