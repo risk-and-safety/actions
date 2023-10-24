@@ -39253,7 +39253,7 @@ async function dockerRelease(params) {
   await dockerPush(dockerImage, tag);
 
   if (deploy) {
-    await dockerPush(dockerImage, env)
+    await dockerPush(dockerImage, env);
   }
 
   return `${dockerImage}:${tag}`;
