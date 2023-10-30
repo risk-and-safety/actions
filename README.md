@@ -13,3 +13,7 @@ Common GitHub Actions for Risk and Safety Solution.
 - s3-deploy
 - s3-metadata
 - s3-stage
+
+## Testing GithubActions
+
+If the `yarn test` command fails try `yarn test --config ./jest.config.js` from the root of this project.
