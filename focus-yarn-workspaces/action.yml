@@ -1,0 +1,20 @@
+name: Focus Yarn Workspaces
+description: Override the Yarn package.json workspaces field with this package and it's workspace dependencies.
+inputs:
+  package:
+    description: The package name to focus
+    required: true
+  root-package-json:
+    description: Path to the root package.json for Yarn workspaces
+    required: false
+    default: ./package.json
+  lerna-config:
+    description: Path to the root lerna.json for Yarn workspaces
+    required: false
+    default: ./lerna.json
+  bad-resolutions:
+    description: Comma delimited list of package.json resolutions to remove
+    required: false
+runs:
+  using: node16
+  main: index.js
