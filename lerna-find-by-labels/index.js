@@ -74445,13 +74445,13 @@ const { exec, sh } = __nccwpck_require__(77845);
 const devEnvBranch = process.env.DEV_ENV_BRANCH || 'master';
 // A map whose keys are environments, and values are the source environments.
 const sourceEnvOf = new Map([
-    [devEnvBranch, undefined],
-    ['qa', devEnvBranch],
-    ['prod', 'qa'],
-    ['hc', 'qa'],
+  [devEnvBranch, undefined],
+  ['qa', devEnvBranch],
+  ['prod', 'qa'],
+  ['hc', 'qa'],
 ]);
 
-const ENV_BRANCHES = Array.from(sourceEnvOf.keys())
+const ENV_BRANCHES = Array.from(sourceEnvOf.keys());
 const HOME = os.homedir();
 
 async function addCommit(message) {
