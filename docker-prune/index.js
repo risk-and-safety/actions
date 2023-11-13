@@ -38872,7 +38872,18 @@ const os = __nccwpck_require__(2037);
 
 const { exec, sh } = __nccwpck_require__(7845);
 
-const ENV_BRANCHES = ['master', 'qa', 'prod', 'hc'];
+// Set the branch name that represent the dev environment, default to master.
+// This allows us to variably select the lowest branch that represents the dev environment (e.g. main, dev, master).
+const devEnvBranch = process.env.DEV_ENV_BRANCH || 'master';
+// A map whose keys are environments, and values are the source environments.
+const sourceEnvOf = new Map([
+    [devEnvBranch, undefined],
+    ['qa', devEnvBranch],
+    ['prod', 'qa'],
+    ['hc', 'qa'],
+]);
+
+const ENV_BRANCHES = Array.from(sourceEnvOf.keys())
 const HOME = os.homedir();
 
 async function addCommit(message) {
@@ -38916,14 +38927,13 @@ async function getSrcBranch() {
     ? github.context.ref.split('/').pop()
     : await exec('git rev-parse --abbrev-ref HEAD');
 
-  const pos = ENV_BRANCHES.indexOf(branch);
-  return pos > 0 ? ENV_BRANCHES[pos - 1] : branch;
+  return sourceEnvOf.get(branch) || branch;
 }
 
 async function getEnv({ branch, envList = ENV_BRANCHES } = {}) {
   const destBranch = branch || (await getDestBranch());
 
-  if (destBranch !== 'master' && envList.includes(destBranch)) {
+  if (destBranch !== devEnvBranch && envList.includes(destBranch)) {
     return destBranch;
   }
 
