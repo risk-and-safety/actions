@@ -39217,6 +39217,7 @@ async function dockerRelease(params) {
     password,
     registry = 'docker.pkg.github.com',
     username,
+    buildArg = '',
   } = params;
   const path = params.path && cleanPath(params.path);
   const app = cleanAppName(params.app);
@@ -39238,7 +39239,7 @@ async function dockerRelease(params) {
   await dockerLogin({ username, password, registry });
 
   if (path) {
-    await dockerBuild({ dockerImage, tag, file, path, labels });
+    await dockerBuild({ dockerImage, tag, file, path, labels, args: buildArg });
   } else {
     await sh(`docker pull ${dockerImage}:${stagingTag}`);
     await sh(`docker tag ${dockerImage}:${stagingTag} ${dockerImage}:${tag}`);
@@ -39555,7 +39556,7 @@ async function deleteVersion(gitHubClient, { id, name, version }) {
   info(`Deleted version ${name}:${version} ( ${id} ): ${util.inspect(deletePackageVersion)}`);
 }
 
-async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
+async function dockerBuild({ dockerImage, tag, file, path, labels = [], args = '' }) {
   const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'];
   if (fs.existsSync('package.json') && lockFiles.every((item) => !fs.existsSync(item))) {
     throw new Error(`Missing one of ${lockFiles.join(', ')}`);
@@ -39569,8 +39570,9 @@ async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
   );
 
   const fileArg = file ? `-f ${file}` : '';
+  const buildArg = args ? args.split(/,\s+|\s+/).reduce((acc, arg) => `${acc} --build-arg ${arg}`, '') : '';
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
+  await sh(`docker build ${buildArg} -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {
@@ -40173,6 +40175,7 @@ const params = {
   path: core.getInput('path'),
   labels: inputList(core.getInput('labels')),
   registry: core.getInput('registry'),
+  buildArg: core.getInput('build-arg'),
 };
 
 dockerRelease(params)

@@ -39523,7 +39523,7 @@ async function deleteVersion(gitHubClient, { id, name, version }) {
   info(`Deleted version ${name}:${version} ( ${id} ): ${util.inspect(deletePackageVersion)}`);
 }
 
-async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
+async function dockerBuild({ dockerImage, tag, file, path, labels = [], args = '' }) {
   const lockFiles = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml'];
   if (fs.existsSync('package.json') && lockFiles.every((item) => !fs.existsSync(item))) {
     throw new Error(`Missing one of ${lockFiles.join(', ')}`);
@@ -39537,8 +39537,9 @@ async function dockerBuild({ dockerImage, tag, file, path, labels = [] }) {
   );
 
   const fileArg = file ? `-f ${file}` : '';
+  const buildArg = args ? args.split(/,\s+|\s+/).reduce((acc, arg) => `${acc} --build-arg ${arg}`, '') : '';
 
-  await sh(`docker build -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
+  await sh(`docker build ${buildArg} -t ${dockerImage}:${tag} ${fileArg} ${path} ${labelArgs}`);
 }
 
 async function dockerLogin({ username, password, registry = 'docker.pkg.github.com' }) {

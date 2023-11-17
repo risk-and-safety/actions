@@ -37,6 +37,9 @@ inputs:
     description: Docker registry
     required: false
     default: docker.pkg.github.com
+  build-arg:
+    description: Docker build arg. Provide the comma/space separated string (eg a_variable=a_value,b_variable=b_value)
+    required: false
 outputs:
   image:
     description: The Docker image name
