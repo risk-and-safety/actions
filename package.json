@@ -27,7 +27,7 @@
     "@nrwl/cli": "15.0.13",
     "@slack/web-api": "6.8.0",
     "aws-sdk": "2.1253.0",
-    "axios": "0.27.2",
+    "axios": "0.30.0",
     "conventional-changelog-angular": "5.0.13",
     "date-fns": "2.29.3",
     "fs-extra": "10.1.0",
