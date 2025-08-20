@@ -3,38 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.15.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.14.3...github-actions@3.15.0) (2023-11-17)
+# [3.16.0](https://github.com/risk-and-safety/platform/compare/github-actions@3.14.4...github-actions@3.16.0) (2023-12-08)
 
+### Bug Fixes
 
+- **docker-release:** rename buildArg to build-arg ([e8e5755](https://github.com/risk-and-safety/platform/commit/e8e5755599b5bf955052fc53333259b1a75d227f))
 
-## 2023.11.17-10.54 (2023-11-17)
-
+## 2023.11.17-11.33 (2023-11-17)
 
 ### Features
 
-* **docker-release:** add build-arg option AQL-1168 ([d9d37cc](https://github.com/risk-and-safety/platform/commit/d9d37cc5d84c52c97209a6e426374d7c150a34c1))
-
-
-
-
-
-## [3.14.3](https://github.com/risk-and-safety/platform/compare/github-actions@3.14.2...github-actions@3.14.3) (2023-11-14)
-
-**Note:** Version bump only for package github-actions
-
-
-
-
-
-## [3.14.2](https://github.com/risk-and-safety/platform/compare/github-actions@3.14.1...github-actions@3.14.2) (2023-11-07)
-
-## 2023.10.30-22.43 (2023-10-31)
-
-## 2023.10.27-15.58 (2023-10-27)
-
-**Note:** Version bump only for package github-actions
-
-## [3.14.1](https://github.com/risk-and-safety/platform/compare/github-actions@3.14.0...github-actions@3.14.1) (2023-10-24)
+- **docker-release:** add build-arg option AQL-1168 ([d9d37cc](https://github.com/risk-and-safety/platform/commit/d9d37cc5d84c52c97209a6e426374d7c150a34c1))
 
 ## 2023.10.24-15.59 (2023-10-24)
 
