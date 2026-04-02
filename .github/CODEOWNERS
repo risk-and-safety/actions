@@ -1,0 +1,12 @@
+# Global default
+* @risk-and-safety/awesome
+
+# GitHub metadata
+.github/ @risk-and-safety/awesome
+
+# Docs
+docs/ @risk-and-safety/awesome
+*.md @risk-and-safety/awesome
+
+# CI/CD
+.github/workflows/ @risk-and-safety/awesome
