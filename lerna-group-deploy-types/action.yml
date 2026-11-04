@@ -24,5 +24,5 @@ outputs:
   S3:
     description: Changed S3 web asset bundles (comma separated)
 runs:
-  using: node12
+  using: node24
   main: index.js

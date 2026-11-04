@@ -19,5 +19,5 @@ outputs:
   cache-hit:
     description: Zip file 'filehash' metadata matches the provided file-hash
 runs:
-  using: node16
+  using: node24
   main: index.js
