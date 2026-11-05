@@ -16,5 +16,5 @@ outputs:
   packages:
     description: Serialized JSON array of trimmed down package.json files
 runs:
-  using: node16
+  using: node24
   main: index.js
